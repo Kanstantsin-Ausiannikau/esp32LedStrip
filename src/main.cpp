@@ -7,7 +7,7 @@
 #include <ArduinoOTA.h>
 #include "effects.h"
 
-#define LED_COUNT 89
+#define LED_COUNT 178
 #define STASSID "WifiNet4"
 #define STAPSK "22349026"
 
@@ -33,7 +33,7 @@ bool buttonState;
 int debounceTimeCounter;
 long startTimer;
 
-bool isBreaked = false;
+bool isBreaked;
 int currentEffectIndex = 0;
 
 hw_timer_t *timer = NULL;
@@ -44,6 +44,7 @@ void setup()
 
   delay(500);
 
+  isBreaked = false;
   Serial.begin(115200);
   Serial.println("Booting");
   WiFi.mode(WIFI_STA);
@@ -99,40 +100,34 @@ void setup()
   buttonState = false;
   debounceTimeCounter = 0;
 
+  
+
   attachInterrupt(BUTTON_PIN, keyPressed, HIGH);
 }
 
 void ICACHE_RAM_ATTR keyPressed()
 {
-
+  Serial.println("button start pressing");
   startTimer = millis();
 
   timer = timerBegin(0, 80, true);
   timerAttachInterrupt(timer, &onTimer, true);
-  timerAlarmWrite(timer, 1000000, true);
+  timerAlarmWrite(timer, 20000, true);
   timerAlarmEnable(timer);
-
-  // timer1_isr_init();
-  // timer1_attachInterrupt(debounceTime);
-  // timer1_enable(TIM_DIV256, TIM_EDGE, TIM_LOOP);
-  // timer1_write(10000);
 }
 
 void IRAM_ATTR onTimer()
 {
+  Serial.println("pressed");
+  Serial.println(millis() - startTimer);
   portENTER_CRITICAL_ISR(&timerMux);
+
   if (digitalRead(BUTTON_PIN) == HIGH)
   {
-    Serial.println(millis() - startTimer);
-    //doBreaked = true;
-
     isBreaked = true;
-
     currentEffectIndex++;
-
-    Serial.println("pressed");
-    timerAlarmDisable(timer);
   }
+  timerAlarmDisable(timer);
   portEXIT_CRITICAL_ISR(&timerMux);
 }
 
@@ -173,7 +168,8 @@ void loop()
 
 void effect1()
 {
-  rainbowCycle(strip, 20);
+  //rainbowCycle(strip, 20, isBreaked);
+  SnowSparkle(strip, 0x10, 0x10, 0x10, 50, random(50, 500));
 }
 
 void effect2()
@@ -183,7 +179,8 @@ void effect2()
 
 void effect3()
 {
-  SnowSparkle(strip, 0x10, 0x10, 0x10, 50, random(50, 500));
+  rainbowCycle(strip, 20, isBreaked);
+  //SnowSparkle(strip, 0x10, 0x10, 0x10, 50, random(50, 500));
 }
 
 void effect4()
