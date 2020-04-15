@@ -44,7 +44,6 @@ void setup()
 
   delay(500);
 
-  isBreaked = false;
   Serial.begin(115200);
   Serial.println("Booting");
   WiFi.mode(WIFI_STA);
@@ -97,19 +96,14 @@ void setup()
 
   randomSeed(analogRead(0));
 
+  isBreaked = false;
   buttonState = false;
   debounceTimeCounter = 0;
-
-  
-
   attachInterrupt(BUTTON_PIN, keyPressed, HIGH);
 }
 
 void ICACHE_RAM_ATTR keyPressed()
 {
-  Serial.println("button start pressing");
-  startTimer = millis();
-
   timer = timerBegin(0, 80, true);
   timerAttachInterrupt(timer, &onTimer, true);
   timerAlarmWrite(timer, 20000, true);
@@ -131,21 +125,6 @@ void IRAM_ATTR onTimer()
   portEXIT_CRITICAL_ISR(&timerMux);
 }
 
-// void ICACHE_RAM_ATTR debounceTime()
-// {
-//   if (digitalRead(BUTTON_PIN) == HIGH)
-//   {
-//     Serial.println(millis() - startTimer);
-//     //doBreaked = true;
-
-//     isBreaked = true;
-//     timer1_disable();
-//     currentEffectIndex++;
-
-//     Serial.println("pressed");
-//   }
-// }
-
 void loop()
 {
   ArduinoOTA.handle();
@@ -162,13 +141,10 @@ void loop()
   }
 
   effects[currentEffectIndex]();
-
-  //Fire(strip, 55, 120, 15);
 }
 
 void effect1()
 {
-  //rainbowCycle(strip, 20, isBreaked);
   SnowSparkle(strip, 0x10, 0x10, 0x10, 50, random(50, 500));
 }
 
@@ -180,12 +156,12 @@ void effect2()
 void effect3()
 {
   rainbowCycle(strip, 20, isBreaked);
-  //SnowSparkle(strip, 0x10, 0x10, 0x10, 50, random(50, 500));
 }
 
 void effect4()
 {
-  setAll(strip, 0xff, 0xff, 0xff);
+  // setAll(strip, 0xff, 0xff, 0xff); - full brightness
+  setAll(strip, 100, 100, 100);
   delay(500);
 }
 
