@@ -22,10 +22,11 @@ void effect2();
 void effect3();
 void effect4();
 void effect5();
+void effect6();
 void keyPressed();
 void onTimer();
 
-GenericFP effects[5] = {&effect1, &effect2, &effect3, &effect4, &effect5}; //create an array of 'GenericFP' function pointers. Notice the '&' operator
+GenericFP effects[6] = {&effect1, &effect2, &effect3, &effect4, &effect5, &effect6}; //create an array of 'GenericFP' function pointers. Notice the '&' operator
 
 CRGB strip[LED_COUNT];
 
@@ -166,6 +167,11 @@ void effect4()
 }
 
 void effect5()
+{
+  meteorRain(strip, 0xff,0xff,0xff,10, 64, true, 30);
+}
+
+void effect6()
 {
   setAll(strip, 0, 0, 0);
 }
