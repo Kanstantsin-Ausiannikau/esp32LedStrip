@@ -12,6 +12,9 @@ void rainbowCycle(CRGB strip[], int SpeedDelay, bool &isBreaked);
 byte *Wheel(byte WheelPos);
 void meteorRain(CRGB strip[], byte red, byte green, byte blue, byte meteorSize, byte meteorTrailDecay, boolean meteorRandomDecay, int SpeedDelay);
 void fadeToBlack(CRGB strip[], int ledNo, byte fadeValue);
+void rainbowGayer(CRGB strip [], byte counter);
+void OneByOne(CRGB strip[], byte red, byte green, byte blue, int StripLength);
+void ByOneRandom(CRGB strip[], byte red, byte green, byte blue, int StripLength);
 
 void SnowSparkle(CRGB strip[], byte red, byte green, byte blue, int SparkleDelay, int SpeedDelay)
 {
@@ -172,9 +175,15 @@ void meteorRain(CRGB strip[], byte red, byte green, byte blue, byte meteorSize, 
 {  
   setAll(strip, 0,0,0);
  
-  for(int i = 0; i < FastLED.size()*2; i++) {
+  for(int i = 0; i < FastLED.size()*2; i++) 
+  {
    
-   
+      // if (isBreaked)
+      // {
+      //   setAll(strip, 0, 0, 0);
+      //   return;
+      // }
+ 
     // fade brightness all LEDs one step
     for(int j=0; j<FastLED.size(); j++) {
       if( (!meteorRandomDecay) || (random(10)>5) ) {
@@ -198,3 +207,82 @@ void fadeToBlack(CRGB strip[], int ledNo, byte fadeValue)
 {
    strip[ledNo].fadeToBlackBy( fadeValue );
 }
+
+void rainbowGayer(CRGB strip [], byte counter)
+{
+  for (int i = 0; i < FastLED.size(); i++ ) {         // от 0 до первой трети
+    strip[i] = CHSV(counter + i * 2, 255, 255);  // HSV. Увеличивать HUE (цвет)
+    // умножение i уменьшает шаг радуги
+  }
+  FastLED.show();
+  delay(15);         // скорость движения радуги
+}
+
+void OneByOne(CRGB strip[], byte red, byte green, byte blue, int StripLength)
+{
+  for(int i = 0; i < StripLength/2; i++)
+  {
+    setPixel(strip, i, red, green, blue);
+    setPixel(strip, StripLength-i, red, green, blue);
+    showStrip();
+    delay(25);    
+  }
+  for(int i = 0; i < StripLength/2; i++)
+  {
+    setPixel(strip, i, 255, 0, 0);
+    setPixel(strip, StripLength-i, 255, 0, 0);
+    showStrip();
+    delay(25);
+  }
+  for(int i = 0; i < StripLength/2; i++)
+  {
+    setPixel(strip, i, 0, 255, 0);
+    setPixel(strip, StripLength-i, 0, 255, 0);
+    showStrip();
+    delay(25);
+  }
+  for(int i = 0; i < StripLength/2; i++)
+  {
+    setPixel(strip, i, 0, 0, 255);
+    setPixel(strip, StripLength-i, 0, 0, 255);
+    showStrip();
+    delay(25);
+  }
+}
+
+void ByOneRandom(CRGB strip[], byte red, byte green, byte blue, int StripLength)
+{  
+  delay(5000);
+  //создаем массив из неподсвеченных светодиодов
+  int unflashed[StripLength];
+  for(int i = 0; i < StripLength; i++)
+  {
+    unflashed[i] = i;
+  }
+  
+  //зажигаем светодиоды по одному StripLength раз
+  int unflashedCount = StripLength;
+  for(int i = 0; i < StripLength; i++)
+  {
+    //выбираем светодиод из неподсвеченных
+    int j = random(unflashedCount+1);
+
+    //зажигаем его
+    setPixel(strip, unflashed[j], red, green, blue);
+    showStrip();
+    delay(100);
+    unflashedCount = unflashedCount - 1;
+
+    //смещаем весь массив на 1 влево и заменяем на "-1" загоревшийся светодиод
+    int last = StripLength;
+    for(int i = j; i < unflashedCount; i++)
+    {
+      unflashed[i] = unflashed[i+1];
+    }
+    unflashed[last] = -1;
+    last = last - 1;
+  }
+
+}
+
+

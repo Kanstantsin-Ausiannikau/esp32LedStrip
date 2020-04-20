@@ -16,5 +16,8 @@ void rainbowCycle(CRGB strip[], int SpeedDelay, bool &isBreaked);
 byte *Wheel(byte WheelPos);
 void meteorRain(CRGB strip[], byte red, byte green, byte blue, byte meteorSize, byte meteorTrailDecay, boolean meteorRandomDecay, int SpeedDelay);
 void fadeToBlack(CRGB strip[], int ledNo, byte fadeValue);
+void rainbowGayer(CRGB strip [], byte counter);
+void OneByOne(CRGB strip[], byte red, byte green, byte blue, int Stripength);
+void ByOneRandom(CRGB strip[], byte red, byte green, byte blue, int StripLength);
 
 #endif

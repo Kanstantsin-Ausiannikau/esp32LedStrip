@@ -23,12 +23,17 @@ void effect3();
 void effect4();
 void effect5();
 void effect6();
+void effect7();
+void effect8();
+void effect9();
 void keyPressed();
 void onTimer();
 
-GenericFP effects[6] = {&effect1, &effect2, &effect3, &effect4, &effect5, &effect6}; //create an array of 'GenericFP' function pointers. Notice the '&' operator
+GenericFP effects[9] = {&effect1, &effect2, &effect3, &effect4, &effect5, &effect6, &effect7, &effect8, &effect9}; //create an array of 'GenericFP' function pointers. Notice the '&' operator
 
 CRGB strip[LED_COUNT];
+
+byte counter;
 
 bool buttonState;
 int debounceTimeCounter;
@@ -101,6 +106,8 @@ void setup()
   buttonState = false;
   debounceTimeCounter = 0;
   attachInterrupt(BUTTON_PIN, keyPressed, HIGH);
+
+  counter = 0;
 }
 
 void ICACHE_RAM_ATTR keyPressed()
@@ -151,7 +158,7 @@ void effect1()
 
 void effect2()
 {
-  Fire(strip, 55, 120, 15);
+  Fire(strip, 110, 180, 15);
 }
 
 void effect3()
@@ -162,16 +169,36 @@ void effect3()
 void effect4()
 {
   // setAll(strip, 0xff, 0xff, 0xff); - full brightness
-  setAll(strip, 100, 100, 100);
+  setAll(strip, 100, 1100, 100);
   delay(500);
 }
 
 void effect5()
 {
-  meteorRain(strip, 0xff,0xff,0xff,10, 64, true, 30);
+  //meteorRain(strip, 0xff,0xff,0xff,10, 64, true, 30);
+  setAll(strip, 100, 50, 50);
 }
 
 void effect6()
+{
+  rainbowGayer(strip, counter);
+  counter++;
+}
+
+void effect7()
+{
+  OneByOne(strip, 100, 100, 100, LED_COUNT);
+}
+
+void effect8()
+{
+  ByOneRandom(strip, 100, 100, 100, LED_COUNT);
+  ByOneRandom(strip, 100, 0, 0, LED_COUNT);
+  ByOneRandom(strip, 0, 100, 0, LED_COUNT);
+  ByOneRandom(strip, 0, 0, 100, LED_COUNT);
+}
+
+void effect9()
 {
   setAll(strip, 0, 0, 0);
 }
