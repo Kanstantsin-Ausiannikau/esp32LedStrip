@@ -15,6 +15,8 @@ void fadeToBlack(CRGB strip[], int ledNo, byte fadeValue);
 void rainbowGayer(CRGB strip [], byte counter);
 void OneByOne(CRGB strip[], byte red, byte green, byte blue, int StripLength);
 void ByOneRandom(CRGB strip[], byte red, byte green, byte blue, int StripLength);
+void Gradient(CRGB strip[], int StripLength);
+void FadingAway(CRGB strip[], byte red, byte green, byte blue, int StripLength);
 
 void SnowSparkle(CRGB strip[], byte red, byte green, byte blue, int SparkleDelay, int SpeedDelay)
 {
@@ -227,27 +229,6 @@ void OneByOne(CRGB strip[], byte red, byte green, byte blue, int StripLength)
     showStrip();
     delay(25);    
   }
-  for(int i = 0; i < StripLength/2; i++)
-  {
-    setPixel(strip, i, 255, 0, 0);
-    setPixel(strip, StripLength-i, 255, 0, 0);
-    showStrip();
-    delay(25);
-  }
-  for(int i = 0; i < StripLength/2; i++)
-  {
-    setPixel(strip, i, 0, 255, 0);
-    setPixel(strip, StripLength-i, 0, 255, 0);
-    showStrip();
-    delay(25);
-  }
-  for(int i = 0; i < StripLength/2; i++)
-  {
-    setPixel(strip, i, 0, 0, 255);
-    setPixel(strip, StripLength-i, 0, 0, 255);
-    showStrip();
-    delay(25);
-  }
 }
 
 void ByOneRandom(CRGB strip[], byte red, byte green, byte blue, int StripLength)
@@ -283,6 +264,72 @@ void ByOneRandom(CRGB strip[], byte red, byte green, byte blue, int StripLength)
     last = last - 1;
   }
 
+}
+
+void Gradient(CRGB strip[], int StripLength)
+{
+  for(int i = 255, j = 0; i >= 0, j <= 255; i-=1, j+=1) //blue to red
+  {
+    setAll(strip, j, 0, i);
+    showStrip();
+    delay(10);
+  }
+  
+  for(int i = 255, j = 0; i >= 0, j <= 255; i-=1, j+=1) //red to green
+  {
+    setAll(strip, i, j, 0);
+    showStrip();
+    delay(10);
+  }
+  for(int i = 255, j = 0; i >= 0, j <= 255; i-=1, j+=1) //green to blue
+  {
+    setAll(strip, 0, i, j);
+    showStrip();
+    delay(10);
+  }
+}
+void FadingAway(CRGB strip[], byte red, byte green, byte blue, int StripLength)
+{
+  int i = 0;
+  int j = 0;
+  int k = 0;
+  bool isBright = false;
+  while(isBright == false) //повышаем яркость
+  {
+    setAll(strip, i, j, k);
+    showStrip();
+    delay(40);
+
+    i+=3;
+    j+=3;
+    k+=3;
+
+    if (i > red)
+    {
+      i = red;
+    }
+    if (j > green)
+    {
+      j = green;
+    }
+    if (k > blue)
+    {
+      k = blue;
+    }
+
+    if (i >= red && j >= green && k >= blue)
+    {
+      if (j >= green)
+      {
+        if (k >= blue)
+        {
+          isBright = true;
+        }
+      }
+    }
+  }
+
+  
 }
 
 

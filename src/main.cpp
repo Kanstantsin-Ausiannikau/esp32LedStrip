@@ -26,10 +26,12 @@ void effect6();
 void effect7();
 void effect8();
 void effect9();
+void effect10();
+void effect11();
 void keyPressed();
 void onTimer();
 
-GenericFP effects[9] = {&effect1, &effect2, &effect3, &effect4, &effect5, &effect6, &effect7, &effect8, &effect9}; //create an array of 'GenericFP' function pointers. Notice the '&' operator
+GenericFP effects[11] = {&effect1, &effect2, &effect3, &effect4, &effect5, &effect6, &effect7, &effect8, &effect9, &effect10, &effect11}; //create an array of 'GenericFP' function pointers. Notice the '&' operator
 
 CRGB strip[LED_COUNT];
 
@@ -169,7 +171,7 @@ void effect3()
 void effect4()
 {
   // setAll(strip, 0xff, 0xff, 0xff); - full brightness
-  setAll(strip, 100, 1100, 100);
+  setAll(strip, 100, 100, 100);
   delay(500);
 }
 
@@ -187,18 +189,44 @@ void effect6()
 
 void effect7()
 {
-  OneByOne(strip, 100, 100, 100, LED_COUNT);
+  //OneByOne(strip, 255, 0, 0, LED_COUNT);   //красный
+  //OneByOne(strip, 255, 100, 0, LED_COUNT); //оранжевый
+  //OneByOne(strip, 255, 255, 0, LED_COUNT); // жёлтый
+  //OneByOne(strip, 0, 255, 0, LED_COUNT);   //зелёный
+  //OneByOne(strip, 0, 255, 255, LED_COUNT); //голубой
+  //OneByOne(strip, 0, 0, 255, LED_COUNT);   //синий
+  //OneByOne(strip, 127, 0, 255, LED_COUNT); //фиолетовый
+  //OneByOne(strip, 0, 0, 255, LED_COUNT);   //синий
+  //OneByOne(strip, 0, 255, 255, LED_COUNT); //голубой
+  //OneByOne(strip, 0, 255, 0, LED_COUNT);   //зелёный
+  //OneByOne(strip, 255, 255, 0, LED_COUNT); // жёлтый
+  //OneByOne(strip, 255, 100, 0, LED_COUNT); //оранжевый
+  Gradient(strip, LED_COUNT);
 }
 
 void effect8()
+{
+  FadingAway(strip, 255, 0, 0, LED_COUNT);
+  FadingAway(strip, 0, 255, 0, LED_COUNT);
+  FadingAway(strip, 0, 0, 255, LED_COUNT);
+}
+
+void effect9()
+{
+  byte red = random(256);
+  byte green = random(256);
+  byte blue = random(256);
+  OneByOne(strip, red, green, blue, LED_COUNT);
+}
+
+void effect10()
 {
   ByOneRandom(strip, 100, 100, 100, LED_COUNT);
   ByOneRandom(strip, 100, 0, 0, LED_COUNT);
   ByOneRandom(strip, 0, 100, 0, LED_COUNT);
   ByOneRandom(strip, 0, 0, 100, LED_COUNT);
 }
-
-void effect9()
+void effect11()
 {
   setAll(strip, 0, 0, 0);
 }

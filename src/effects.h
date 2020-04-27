@@ -19,5 +19,7 @@ void fadeToBlack(CRGB strip[], int ledNo, byte fadeValue);
 void rainbowGayer(CRGB strip [], byte counter);
 void OneByOne(CRGB strip[], byte red, byte green, byte blue, int Stripength);
 void ByOneRandom(CRGB strip[], byte red, byte green, byte blue, int StripLength);
+void Gradient(CRGB strip[], int StripLength);
+void FadingAway(CRGB strip[], byte red, byte green, byte blue, int StripLength);
 
 #endif
